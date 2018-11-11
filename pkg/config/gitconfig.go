@@ -4,17 +4,20 @@ import (
 	"fmt"
 	"github.com/google/go-github/v18/github"
 	"gopkg.in/src-d/go-git.v4"
-	"os"
 	"strconv"
 )
 
-type Config interface {
-	StorePullRequest(remote string, request *github.PullRequest) error
-	Clean() error
-}
-
 type gitConfig struct {
 	repo *git.Repository
+}
+
+func (c *gitConfig) GetRemoteURL(remoteName string) (string, error) {
+	remote, err := c.repo.Remote(remoteName)
+	if err != nil {
+		return "", err
+	}
+
+	return remote.Config().URLs[0], nil
 }
 
 func (c *gitConfig) Clean() error {
@@ -54,18 +57,4 @@ func (c *gitConfig) StorePullRequest(remote string, request *github.PullRequest)
 	}
 
 	return nil
-}
-
-func NewGitConfig() (Config, error) {
-	wd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
-
-	repo, err := git.PlainOpen(wd)
-	if err != nil {
-		return nil, err
-	}
-
-	return &gitConfig{repo}, nil
 }

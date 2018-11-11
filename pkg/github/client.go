@@ -3,7 +3,6 @@ package github
 import (
 	"context"
 	"github.com/google/go-github/v18/github"
-	"log"
 )
 
 type Client interface {
@@ -24,11 +23,9 @@ func NewClient() Client {
 
 func (c client) GetPullRequests(owner, repo string, filter PullRequestFilter) (PullRequests, error) {
 
-	prs, rsp, err := c.gh.PullRequests.List(context.Background(), owner, repo, &github.PullRequestListOptions{
+	prs, _, err := c.gh.PullRequests.List(context.Background(), owner, repo, &github.PullRequestListOptions{
 		State: "open",
 	})
-
-	log.Printf("The response is: %v", rsp.StatusCode)
 
 	if err != nil {
 		return nil, err

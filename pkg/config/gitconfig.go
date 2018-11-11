@@ -10,10 +10,27 @@ import (
 
 type Config interface {
 	StorePullRequest(remote string, request *github.PullRequest) error
+	Clean() error
 }
 
 type gitConfig struct {
 	repo *git.Repository
+}
+
+func (c *gitConfig) Clean() error {
+	config, err := c.repo.Config()
+	if err != nil {
+		return err
+	}
+
+	config.Raw.RemoveSection("github-pr")
+
+	err = c.repo.Storer.SetConfig(config)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (c *gitConfig) StorePullRequest(remote string, request *github.PullRequest) error {

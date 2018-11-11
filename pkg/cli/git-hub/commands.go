@@ -1,10 +1,13 @@
 package git_hub
 
-import "github.com/sjanota/git-hub/pkg/cli"
+import (
+	"github.com/sjanota/git-hub/pkg/cli"
+	"github.com/sjanota/git-hub/pkg/config"
+)
 
-func Commands() []cli.Command {
+func Commands(cfg config.Config) []cli.Command {
 	return []cli.Command{
-		&Fetch{},
-		&Clean{},
+		&fetch{cfg: cfg},
+		&clean{},
 	}
 }

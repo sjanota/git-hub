@@ -11,6 +11,19 @@ type gitConfig struct {
 	repo *git.Repository
 }
 
+func (c *gitConfig) ListRemoteNames() ([]string, error) {
+	remotes, err := c.repo.Remotes()
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]string, len(remotes))
+	for i, remote := range remotes {
+		result[i] = remote.Config().Name
+	}
+	return result, nil
+}
+
 func (c *gitConfig) GetRemoteURL(remoteName string) (string, error) {
 	remote, err := c.repo.Remote(remoteName)
 	if err != nil {

@@ -10,6 +10,7 @@ type Config interface {
 	StorePullRequest(remote string, request *github.PullRequest) error
 	Clean() error
 	GetRemoteURL(remote string) (string, error)
+	ListRemoteNames() ([]string, error)
 }
 
 func NewGitConfig() (Config, error) {

@@ -10,12 +10,8 @@ func Fetch() {
 
 }
 
-func FetchPullRequests(remote string) error {
+func FetchPullRequests(cfg config.Config, remote string) error {
 	gh := github.NewClient()
-	cfg, err := config.NewGitConfig()
-	if err != nil {
-		return errors.Wrap(err, "open git config")
-	}
 
 	remoteUrl, err := cfg.GetRemoteURL(remote)
 	if err != nil {

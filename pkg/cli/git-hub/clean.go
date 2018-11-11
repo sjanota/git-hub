@@ -5,10 +5,10 @@ import (
 	"github.com/sjanota/git-hub/pkg/ops"
 )
 
-type Clean struct{}
+type clean struct{}
 
-func (c *Clean) Configure(app *cli.Cli) {
-	app.Command("clean", "Clean GitHub data from repo config", func(cmd *cli.Cmd) {
+func (c *clean) Configure(app *cli.Cli) {
+	app.Command("clean", "clean GitHub data from repo config", func(cmd *cli.Cmd) {
 		cmd.Action = func() {
 			err := ops.Clean()
 			if err != nil {

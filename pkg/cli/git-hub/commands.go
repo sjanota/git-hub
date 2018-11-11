@@ -9,5 +9,6 @@ func Commands(cfg config.Config) []cli.Command {
 	return []cli.Command{
 		&fetch{cfg: cfg},
 		&clean{},
+		&open{cfg: cfg},
 	}
 }

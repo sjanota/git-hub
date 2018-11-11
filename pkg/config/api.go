@@ -1,16 +1,17 @@
 package config
 
 import (
-	"github.com/google/go-github/v18/github"
 	"gopkg.in/src-d/go-git.v4"
 	"os"
 )
 
 type Config interface {
-	StorePullRequest(remote string, request *github.PullRequest) error
+	StorePullRequest(remote string, request *PullRequest) error
 	Clean() error
 	GetRemoteURL(remote string) (string, error)
 	ListRemoteNames() ([]string, error)
+	GetCurrentBranch() (string, error)
+	GetPullRequestForBranch(branch string) (*PullRequest, error)
 }
 
 func NewGitConfig() (Config, error) {

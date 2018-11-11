@@ -1,4 +1,4 @@
-package git_hub
+package main
 
 import (
 	"github.com/jawher/mow.cli"

@@ -1,9 +1,13 @@
 package github
 
-import "github.com/google/go-github/v18/github"
+import (
+	"context"
+	"github.com/google/go-github/v18/github"
+	"log"
+)
 
 type Client interface {
-	GetMyPullRequests() ([]*github.PullRequest, error)
+	GetPullRequests(owner, repo string, filter PullRequestFilter) (PullRequests, error)
 }
 
 type client struct {
@@ -18,16 +22,17 @@ func NewClient() Client {
 	}
 }
 
-func (c client) GetMyPullRequests() ([]*github.PullRequest, error) {
+func (c client) GetPullRequests(owner, repo string, filter PullRequestFilter) (PullRequests, error) {
 
-	prs, _, err := c.gh.PullRequests.List(nil, "kyma-project", "kyma", &github.PullRequestListOptions{
+	prs, rsp, err := c.gh.PullRequests.List(context.Background(), owner, repo, &github.PullRequestListOptions{
 		State: "open",
-		Head:  "assignee:sjanota",
 	})
+
+	log.Printf("The response is: %v", rsp.StatusCode)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return prs, nil
+	return &pullRequests{prs: prs, filter: filter}, nil
 }

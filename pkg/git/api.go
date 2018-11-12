@@ -6,7 +6,7 @@ import (
 )
 
 type Repo interface {
-	StorePullRequest(request *PullRequest) error
+	StorePullRequest(pr *PullRequest) error
 	ListPullRequests() ([]*PullRequest, error)
 	GetPullRequestForBranch(branch string) (*PullRequest, error)
 

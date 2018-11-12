@@ -10,7 +10,7 @@ import (
 
 type Client interface {
 	GetPullRequests(url *URL, filter PullRequestFilter) (PullRequests, error)
-	PushPullRequestComment(url *URL, pr git.PullRequest) error
+	PushPullRequestComment(url *URL, pr *git.PullRequest) error
 }
 
 type client struct {
@@ -33,7 +33,7 @@ func NewClient(credentials *git.Credentials) Client {
 	}
 }
 
-func (c client) PushPullRequestComment(url *URL, pr git.PullRequest) error {
+func (c client) PushPullRequestComment(url *URL, pr *git.PullRequest) error {
 	_, _, err := c.gh.Issues.CreateComment(context.Background(), url.Owner, url.RepositoryName, pr.Number, &github.IssueComment{
 		Body: &pr.Comment,
 	})

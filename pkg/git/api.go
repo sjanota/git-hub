@@ -17,6 +17,7 @@ type Repo interface {
 	GetRootDir() (string, error)
 	StaticCommentEditor(comment string, append bool) CommentEditor
 	FileCommentEditor() CommentEditor
+	GetCredentials(remote string) (*Credentials, error)
 }
 
 func NewConfig() (Repo, error) {

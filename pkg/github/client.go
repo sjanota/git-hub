@@ -3,6 +3,9 @@ package github
 import (
 	"context"
 	"github.com/google/go-github/v18/github"
+	"github.com/sjanota/git-hub/pkg/git"
+	"net/http"
+	"time"
 )
 
 type Client interface {
@@ -15,9 +18,17 @@ type client struct {
 
 var _ Client = &client{}
 
-func NewClient() Client {
+func NewClient(credentials *git.Credentials) Client {
+	httpClient := &http.Client{
+		Timeout: 5 * time.Second,
+		Transport: &github.BasicAuthTransport{
+			Username: credentials.Username,
+			Password: credentials.Password,
+		},
+	}
+
 	return &client{
-		gh: github.NewClient(nil),
+		gh: github.NewClient(httpClient),
 	}
 }
 

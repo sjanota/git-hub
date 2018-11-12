@@ -6,16 +6,21 @@ import (
 	"github.com/sjanota/git-hub/pkg/github"
 )
 
-func FetchPullRequests(cfg git.Repo, remotesLister git.RemotesLister) error {
-	gh := github.NewClient()
-	remotes, err := remotesLister.List(cfg)
+func FetchPullRequests(repo git.Repo, remotesLister git.RemotesLister) error {
+	remotes, err := remotesLister.List(repo)
 	if err != nil {
 		return err
 	}
 
 	for _, remote := range remotes {
+		credentials, err := repo.GetCredentials(remote)
+		if err != nil {
+			return err
+		}
 
-		remoteUrl, err := cfg.GetRemoteURL(remote)
+		gh := github.NewClient(credentials)
+
+		remoteUrl, err := repo.GetRemoteURL(remote)
 		if err != nil {
 			return errors.Wrapf(err, "cannot get remote url %s", remote)
 		}
@@ -26,7 +31,7 @@ func FetchPullRequests(cfg git.Repo, remotesLister git.RemotesLister) error {
 		}
 
 		prs, err := gh.GetPullRequests(url.Owner, url.RepositoryName, github.PullRequestFilter{
-			AssigneeLogin: "sjanota",
+			AssigneeLogin: credentials.Username,
 		})
 
 		if err != nil {
@@ -34,7 +39,7 @@ func FetchPullRequests(cfg git.Repo, remotesLister git.RemotesLister) error {
 		}
 
 		for pr := range prs.Iter() {
-			err := cfg.StorePullRequest(pr)
+			err := repo.StorePullRequest(pr)
 			if err != nil {
 				return err
 			}

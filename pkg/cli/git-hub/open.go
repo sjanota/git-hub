@@ -7,7 +7,7 @@ import (
 )
 
 type open struct {
-	cfg git.Repo
+	repo git.Repo
 }
 
 func (o *open) Configure(app *cli.Cli) {
@@ -17,7 +17,7 @@ func (o *open) Configure(app *cli.Cli) {
 }
 
 func (o *open) action() {
-	err := ops.Open(o.cfg)
+	err := ops.Open(o.repo)
 	if err != nil {
 		panic(err)
 	}

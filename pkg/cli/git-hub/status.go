@@ -7,13 +7,13 @@ import (
 )
 
 type status struct {
-	cfg git.Repo
+	repo git.Repo
 }
 
 func (s *status) Configure(app *cli.Cli) {
 	app.Command("status", "See status of pull requests", func(cmd *cli.Cmd) {
 		cmd.Action = func() {
-			err := ops.Status(s.cfg)
+			err := ops.Status(s.repo)
 			if err != nil {
 				panic(err)
 			}

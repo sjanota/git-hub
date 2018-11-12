@@ -5,12 +5,12 @@ import (
 	"github.com/sjanota/git-hub/pkg/git"
 )
 
-func Commands(cfg git.Repo) []cli.Command {
+func Commands(repo git.Repo) []cli.Command {
 	return []cli.Command{
-		&fetch{cfg: cfg},
-		&clean{cfg: cfg},
-		&open{cfg: cfg},
-		&status{cfg: cfg},
-		&comment{repo: cfg},
+		&fetch{repo: repo},
+		&clean{repo: repo},
+		&open{repo: repo},
+		&status{repo: repo},
+		&comment{repo: repo},
 	}
 }

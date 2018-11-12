@@ -6,13 +6,13 @@ import (
 )
 
 type clean struct {
-	cfg git.Repo
+	repo git.Repo
 }
 
 func (c *clean) Configure(app *cli.Cli) {
 	app.Command("clean", "clean GitHub data from repo git", func(cmd *cli.Cmd) {
 		cmd.Action = func() {
-			err := c.cfg.Clean()
+			err := c.repo.Clean()
 			if err != nil {
 				panic(err)
 			}

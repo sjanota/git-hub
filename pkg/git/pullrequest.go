@@ -5,7 +5,6 @@ import (
 	"github.com/pkg/errors"
 	git_config "gopkg.in/src-d/go-git.v4/plumbing/format/config"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -157,7 +156,6 @@ func (e fileCommentEditor) Edit(pr *PullRequest) (string, error) {
 		return "", errors.Wrap(err, "cannot get text editor")
 	}
 
-	log.Printf("Opening '%s' '%s'", editor, f.Name())
 	err = f.Close()
 	if err != nil {
 		return "", err

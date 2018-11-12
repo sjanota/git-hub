@@ -7,7 +7,7 @@ import (
 )
 
 type fetch struct {
-	cfg    git.Repo
+	repo   git.Repo
 	remote *string
 	all    *bool
 }
@@ -30,7 +30,7 @@ func (f *fetch) action() {
 		remotes = git.OneRemoteLister{Remote: *f.remote}
 	}
 
-	err := ops.FetchPullRequests(f.cfg, remotes)
+	err := ops.FetchPullRequests(f.repo, remotes)
 	if err != nil {
 		panic(err)
 	}

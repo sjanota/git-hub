@@ -11,11 +11,13 @@ type clean struct {
 
 func (c *clean) Configure(app *cli.Cli) {
 	app.Command("clean", "clean GitHub data from repo git", func(cmd *cli.Cmd) {
-		cmd.Action = func() {
-			err := c.repo.Clean()
-			if err != nil {
-				panic(err)
-			}
-		}
+		cmd.Action = c.action
 	})
+}
+
+func (c clean) action() {
+	err := c.repo.Clean()
+	if err != nil {
+		panic(err)
+	}
 }

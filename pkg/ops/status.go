@@ -3,6 +3,12 @@ package ops
 import (
 	"fmt"
 	"github.com/sjanota/git-hub/pkg/config"
+	"strings"
+)
+
+const (
+	statusCommentHeaderPadding = "└──"
+	statusCommentPadding       = "   "
 )
 
 func Status(cfg config.Config) error {
@@ -21,6 +27,14 @@ func Status(cfg config.Config) error {
 			fmt.Printf("* %-6v %-32s %s\n", pr.Number, pr.HeadRef, pr.Title)
 		} else {
 			fmt.Printf("  %-6v %-32s %s\n", pr.Number, pr.HeadRef, pr.Title)
+		}
+
+		if pr.Comment != "" {
+			lines := strings.Split(pr.Comment, "\n")
+			fmt.Println(statusCommentHeaderPadding, lines[0])
+			for _, line := range lines[1:] {
+				fmt.Println(statusCommentPadding, line)
+			}
 		}
 	}
 

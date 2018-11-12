@@ -4,6 +4,31 @@ git-pr is commandline tool to help you deal with your pull request routine. I ca
 load of many pull requests at the same time. It was designed as a tool to help track status of allow those PRs as dozen 
  tabs in browser made it difficult to have overview of what's going on.
 
+## Installation
+
+### Requirements
+To run `git-pr` you obviously need `git` installed. There are no other requirements.
+
+### From sources
+`git-pr` uses go modules so =you need go 1.11 (or newer) to install it from sources.
+
+```
+go get github.com/sjanota/git-pr/cmd/git-pr
+```
+
+### From release
+1. Find latest release in "Releases tab in this repository"
+2. Download `git-pr` version for your operating system and architecture
+3. Rename it to `git-pr`
+4. Add it to your PATH
+
+### Verify installation
+Run following command to check if `git-pr` is successfully installed:
+```bash
+$ git pr --version
+0.0.1
+```
+
 ## Commands
 
 ### `git pr`

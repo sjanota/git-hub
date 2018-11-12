@@ -18,9 +18,9 @@ func Status(cfg config.Config) error {
 
 	for _, pr := range prs {
 		if pr.Number == currentPr.Number {
-			fmt.Printf("*%6v %-32s %s\n", pr.Number, pr.HeadRef, pr.Title)
+			fmt.Printf("* %-6v %-32s %s\n", pr.Number, pr.HeadRef, pr.Title)
 		} else {
-			fmt.Printf(" %6v %-32s %s\n", pr.Number, pr.HeadRef, pr.Title)
+			fmt.Printf("  %-6v %-32s %s\n", pr.Number, pr.HeadRef, pr.Title)
 		}
 	}
 

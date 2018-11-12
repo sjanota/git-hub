@@ -8,6 +8,25 @@ import (
 	"strings"
 )
 
+type PullRequest struct {
+	HeadRef  string
+	HeadRepo string
+	Number   int
+	WebURL   string
+	Remote   string
+	Title    string
+	Comment  string
+}
+
+const (
+	pullRequestSection  = "github-pr"
+	pullRequestTitle    = "title"
+	pullRequestComment  = "comment"
+	pullRequestHeadRef  = "headRef"
+	pullRequestHeadRepo = "headRepo"
+	pullRequestWebUrl   = "webUrl"
+)
+
 func (c *gitConfig) ListPullRequests() ([]*PullRequest, error) {
 	cfg, err := c.repo.Config()
 	if err != nil {
@@ -35,12 +54,12 @@ func (c *gitConfig) StorePullRequest(remote string, request *PullRequest) error 
 
 	subsection := fmt.Sprintf("%s:%v", remote, request.Number)
 
-	cfg.Raw.Section("github-pr").Subsection(subsection).
-		SetOption("title", request.Title).
-		SetOption("headRef", request.HeadRef).
-		SetOption("headRepo", request.HeadRepo).
-		SetOption("number", strconv.Itoa(request.Number)).
-		SetOption("webUrl", request.WebURL)
+	cfg.Raw.Section(pullRequestSection).Subsection(subsection).
+		SetOption(pullRequestTitle, request.Title).
+		SetOption(pullRequestComment, request.Comment).
+		SetOption(pullRequestHeadRef, request.HeadRef).
+		SetOption(pullRequestHeadRepo, request.HeadRepo).
+		SetOption(pullRequestWebUrl, request.WebURL)
 
 	err = c.repo.Storer.SetConfig(cfg)
 	if err != nil {
@@ -71,11 +90,12 @@ func readPullRequestFromSubsection(subsection *config.Subsection) (*PullRequest,
 		return nil, err
 	}
 	return &PullRequest{
-		Title:    subsection.Option("title"),
-		HeadRef:  subsection.Option("headRef"),
-		HeadRepo: subsection.Option("headRepo"),
+		Title:    subsection.Option(pullRequestTitle),
+		Comment:  subsection.Option(pullRequestComment),
+		HeadRef:  subsection.Option(pullRequestHeadRef),
+		HeadRepo: subsection.Option(pullRequestHeadRepo),
 		Number:   number,
-		WebURL:   subsection.Option("webUrl"),
+		WebURL:   subsection.Option(pullRequestWebUrl),
 		Remote:   name[0],
 	}, nil
 }

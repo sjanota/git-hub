@@ -9,16 +9,6 @@ type config struct {
 	repo *git.Repository
 }
 
-func (c *config) GetDefaultTextEditor() (string, error) {
-	cfg, err := c.repo.Config()
-	if err != nil {
-		return "", err
-	}
-
-	cfgEditor := cfg.Raw.Section("core").Option("editor")
-	return cfgEditor, nil
-}
-
 func (c *config) GetCurrentBranch() (string, error) {
 	ref, err := c.repo.Head()
 	if err != nil {

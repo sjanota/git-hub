@@ -6,12 +6,7 @@ import (
 )
 
 func Open(cfg config.Config) error {
-	branch, err := cfg.GetCurrentBranch()
-	if err != nil {
-		return err
-	}
-
-	pr, err := cfg.GetPullRequestForBranch(branch)
+	pr, err := getPullRequestForCurrentBranch(cfg)
 	if err != nil {
 		return err
 	}

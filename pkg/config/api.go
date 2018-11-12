@@ -12,6 +12,7 @@ type Config interface {
 	ListRemoteNames() ([]string, error)
 	GetCurrentBranch() (string, error)
 	GetPullRequestForBranch(branch string) (*PullRequest, error)
+	ListPullRequests() ([]*PullRequest, error)
 }
 
 func NewGitConfig() (Config, error) {

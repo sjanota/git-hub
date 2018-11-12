@@ -6,4 +6,5 @@ type PullRequest struct {
 	Number   int
 	WebURL   string
 	Remote   string
+	Title    string
 }

@@ -10,5 +10,6 @@ func Commands(cfg config.Config) []cli.Command {
 		&fetch{cfg: cfg},
 		&clean{},
 		&open{cfg: cfg},
+		&status{cfg: cfg},
 	}
 }

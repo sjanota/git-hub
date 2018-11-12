@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	listCommentHeaderPadding = "└──"
-	listCommentPadding       = "   "
+	listCommentHeaderPadding = "  └──"
+	listCommentPadding       = "     "
 )
 
 func List(repo git.Repo, details bool) error {

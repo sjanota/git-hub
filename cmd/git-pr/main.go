@@ -10,6 +10,7 @@ import (
 
 func main() {
 	app := cli.App("git-pr", "Use GitHub pull requests from command line")
+	app.Version("version", "0.0.1")
 
 	cfg, err := git.NewConfig()
 	if err != nil {

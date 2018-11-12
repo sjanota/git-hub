@@ -6,21 +6,31 @@ import (
 	"github.com/sjanota/git-hub/pkg/ops"
 )
 
-type comments struct {
+type comment struct {
 	comment *string
-	cfg     git.Config
+	append  *bool
+	repo    git.Repo
 }
 
-func (c *comments) Configure(app *cli.Cli) {
-	app.Command("comment cm", "Edit pul request comment", func(cmd *cli.Cmd) {
-		cmd.Spec = "-m"
-		c.comment = cmd.StringOpt("comment m", "", "Text of the comment")
+func (c *comment) Configure(app *cli.Cli) {
+	app.Command("comment cm", "Edit pull request comment", func(cmd *cli.Cmd) {
+		c.comment = cmd.StringOpt("comment m", "", "Text of the comment to use instead of opening editor")
+		c.append = cmd.BoolOpt("append a", false,
+			"If set text will be appended to existing comment "+
+				"in new line instead of overwriting it. Have no effect if edited in text editor")
 		cmd.Action = c.action
 	})
 }
 
-func (c comments) action() {
-	err := ops.Comment(c.cfg, *c.comment)
+func (c comment) action() {
+	var editor git.CommentEditor
+	if *c.comment != "" {
+		editor = c.repo.StaticCommentEditor(*c.comment, *c.append)
+	} else {
+		editor = c.repo.FileCommentEditor()
+	}
+
+	err := ops.Comment(c.repo, editor)
 	if err != nil {
 		panic(err)
 	}

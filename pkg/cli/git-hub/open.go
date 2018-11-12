@@ -7,7 +7,7 @@ import (
 )
 
 type open struct {
-	cfg git.Config
+	cfg git.Repo
 }
 
 func (o *open) Configure(app *cli.Cli) {

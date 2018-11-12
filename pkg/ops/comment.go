@@ -1,14 +1,21 @@
 package ops
 
-import "github.com/sjanota/git-hub/pkg/git"
+import (
+	"github.com/sjanota/git-hub/pkg/git"
+)
 
-func Comment(cfg git.Config, comment string) error {
-	pr, err := getPullRequestForCurrentBranch(cfg)
+func Comment(repo git.Repo, editor git.CommentEditor) error {
+	pr, err := getPullRequestForCurrentBranch(repo)
+	if err != nil {
+		return err
+	}
+
+	comment, err := editor.Edit(pr)
 	if err != nil {
 		return err
 	}
 
 	pr.Comment = comment
 
-	return cfg.StorePullRequest(pr)
+	return repo.StorePullRequest(pr)
 }

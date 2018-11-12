@@ -6,7 +6,7 @@ import (
 )
 
 type clean struct {
-	cfg git.Config
+	cfg git.Repo
 }
 
 func (c *clean) Configure(app *cli.Cli) {

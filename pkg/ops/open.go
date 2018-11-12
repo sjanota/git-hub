@@ -5,7 +5,7 @@ import (
 	"github.com/sjanota/open-golang/open"
 )
 
-func Open(cfg git.Config) error {
+func Open(cfg git.Repo) error {
 	pr, err := getPullRequestForCurrentBranch(cfg)
 	if err != nil {
 		return err

@@ -11,7 +11,7 @@ const (
 	statusCommentPadding       = "   "
 )
 
-func Status(cfg git.Config) error {
+func Status(cfg git.Repo) error {
 	prs, err := cfg.ListPullRequests()
 	if err != nil {
 		return err

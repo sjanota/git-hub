@@ -6,7 +6,7 @@ import (
 	"github.com/sjanota/git-hub/pkg/github"
 )
 
-func FetchPullRequests(cfg git.Config, remotesLister git.RemotesLister) error {
+func FetchPullRequests(cfg git.Repo, remotesLister git.RemotesLister) error {
 	gh := github.NewClient()
 	remotes, err := remotesLister.List(cfg)
 	if err != nil {

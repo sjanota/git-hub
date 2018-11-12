@@ -4,6 +4,11 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	git_config "gopkg.in/src-d/go-git.v4/plumbing/format/config"
+	"io/ioutil"
+	"log"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -27,8 +32,8 @@ const (
 	pullRequestWebUrl   = "webUrl"
 )
 
-func (c *config) ListPullRequests() ([]*PullRequest, error) {
-	cfg, err := c.repo.Config()
+func (r *repository) ListPullRequests() ([]*PullRequest, error) {
+	cfg, err := r.repo.Config()
 	if err != nil {
 		return nil, err
 	}
@@ -46,8 +51,8 @@ func (c *config) ListPullRequests() ([]*PullRequest, error) {
 	return result, nil
 }
 
-func (c *config) StorePullRequest(pr *PullRequest) error {
-	cfg, err := c.repo.Config()
+func (r *repository) StorePullRequest(pr *PullRequest) error {
+	cfg, err := r.repo.Config()
 	if err != nil {
 		return err
 	}
@@ -56,12 +61,12 @@ func (c *config) StorePullRequest(pr *PullRequest) error {
 
 	cfg.Raw.Section(pullRequestSection).Subsection(subsection).
 		SetOption(pullRequestTitle, pr.Title).
-		SetOption(pullRequestComment, pr.Comment).
+		SetOption(pullRequestComment, strings.Replace(pr.Comment, "\n", "\\n", -1)).
 		SetOption(pullRequestHeadRef, pr.HeadRef).
 		SetOption(pullRequestHeadRepo, pr.HeadRepo).
 		SetOption(pullRequestWebUrl, pr.WebURL)
 
-	err = c.repo.Storer.SetConfig(cfg)
+	err = r.repo.Storer.SetConfig(cfg)
 	if err != nil {
 		return err
 	}
@@ -69,8 +74,8 @@ func (c *config) StorePullRequest(pr *PullRequest) error {
 	return nil
 }
 
-func (c *config) GetPullRequestForBranch(branch string) (*PullRequest, error) {
-	cfg, err := c.repo.Config()
+func (r *repository) GetPullRequestForBranch(branch string) (*PullRequest, error) {
+	cfg, err := r.repo.Config()
 	if err != nil {
 		return nil, err
 	}
@@ -91,11 +96,86 @@ func readPullRequestFromSubsection(subsection *git_config.Subsection) (*PullRequ
 	}
 	return &PullRequest{
 		Title:    subsection.Option(pullRequestTitle),
-		Comment:  subsection.Option(pullRequestComment),
+		Comment:  strings.Replace(subsection.Option(pullRequestComment), "\\n", "\n", -1),
 		HeadRef:  subsection.Option(pullRequestHeadRef),
 		HeadRepo: subsection.Option(pullRequestHeadRepo),
 		Number:   number,
 		WebURL:   subsection.Option(pullRequestWebUrl),
 		Remote:   name[0],
 	}, nil
+}
+
+type CommentEditor interface {
+	Edit(pr *PullRequest) (new string, err error)
+}
+
+type staticCommentEditor struct {
+	comment string
+	append  bool
+}
+
+func (r repository) StaticCommentEditor(comment string, append bool) CommentEditor {
+	return staticCommentEditor{comment: comment, append: append}
+}
+
+func (e staticCommentEditor) Edit(pr *PullRequest) (string, error) {
+	if e.append {
+		return fmt.Sprintf("%s\n%s", pr.Comment, e.comment), nil
+	}
+	return e.comment, nil
+}
+
+func (r repository) FileCommentEditor() CommentEditor {
+	return fileCommentEditor{repo: r}
+}
+
+type fileCommentEditor struct {
+	repo repository
+}
+
+func (e fileCommentEditor) Edit(pr *PullRequest) (string, error) {
+	rootDir, err := e.repo.GetRootDir()
+	if err != nil {
+		return "", err
+	}
+
+	gitDir := filepath.Join(rootDir, ".git")
+	fileName := fmt.Sprintf("PR_%v_COMMENT", pr.Number)
+	f, err := ioutil.TempFile(gitDir, fileName)
+	if err != nil {
+		return "", errors.Wrapf(err, "cannot create temp file %s", fileName)
+	}
+	defer os.Remove(f.Name())
+
+	_, err = f.WriteString(pr.Comment)
+	if err != nil {
+		return "", errors.Wrap(err, "cannot write comment to file")
+	}
+
+	editor, err := e.repo.GetDefaultTextEditor()
+	if err != nil {
+		return "", errors.Wrap(err, "cannot get text editor")
+	}
+
+	log.Printf("Opening '%s' '%s'", editor, f.Name())
+	err = f.Close()
+	if err != nil {
+		return "", err
+	}
+
+	cmd := exec.Command(editor, f.Name())
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	err = cmd.Run()
+	if err != nil {
+		return "", errors.Wrapf(err, "cannot open text editor %s", editor)
+	}
+
+	output, err := ioutil.ReadFile(f.Name())
+	if err != nil {
+		return "", errors.Wrap(err, "cannot read comment content")
+	}
+
+	return strings.TrimSpace(string(output)), nil
 }

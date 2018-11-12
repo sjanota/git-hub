@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-type Config interface {
+type Repo interface {
 	StorePullRequest(request *PullRequest) error
 	Clean() error
 	GetRemoteURL(remote string) (string, error)
@@ -14,9 +14,12 @@ type Config interface {
 	GetPullRequestForBranch(branch string) (*PullRequest, error)
 	ListPullRequests() ([]*PullRequest, error)
 	GetDefaultTextEditor() (string, error)
+	GetRootDir() (string, error)
+	StaticCommentEditor(comment string, append bool) CommentEditor
+	FileCommentEditor() CommentEditor
 }
 
-func NewConfig() (Config, error) {
+func NewConfig() (Repo, error) {
 	wd, err := os.Getwd()
 	if err != nil {
 		return nil, err
@@ -27,5 +30,5 @@ func NewConfig() (Config, error) {
 		return nil, err
 	}
 
-	return &config{repo}, nil
+	return &repository{repo}, nil
 }

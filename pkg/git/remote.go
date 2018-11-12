@@ -1,12 +1,12 @@
 package git
 
 type RemotesLister interface {
-	List(cfg Config) ([]string, error)
+	List(cfg Repo) ([]string, error)
 }
 
 type AllRemotesLister struct{}
 
-func (AllRemotesLister) List(cfg Config) ([]string, error) {
+func (AllRemotesLister) List(cfg Repo) ([]string, error) {
 	return cfg.ListRemoteNames()
 }
 
@@ -14,6 +14,6 @@ type OneRemoteLister struct {
 	Remote string
 }
 
-func (l OneRemoteLister) List(cfg Config) ([]string, error) {
+func (l OneRemoteLister) List(cfg Repo) ([]string, error) {
 	return []string{l.Remote}, nil
 }

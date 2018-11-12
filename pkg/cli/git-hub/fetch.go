@@ -7,7 +7,7 @@ import (
 )
 
 type fetch struct {
-	cfg    git.Config
+	cfg    git.Repo
 	remote *string
 	all    *bool
 }

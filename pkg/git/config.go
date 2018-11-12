@@ -5,12 +5,21 @@ import (
 	"gopkg.in/src-d/go-git.v4"
 )
 
-type config struct {
+type repository struct {
 	repo *git.Repository
 }
 
-func (c *config) GetCurrentBranch() (string, error) {
-	ref, err := c.repo.Head()
+func (r *repository) GetRootDir() (string, error) {
+	wt, err := r.repo.Worktree()
+	if err != nil {
+		return "", err
+	}
+
+	return wt.Filesystem.Root(), nil
+}
+
+func (r *repository) GetCurrentBranch() (string, error) {
+	ref, err := r.repo.Head()
 	if err != nil {
 		return "", err
 	}
@@ -22,8 +31,8 @@ func (c *config) GetCurrentBranch() (string, error) {
 	return ref.Name().Short(), nil
 }
 
-func (c *config) ListRemoteNames() ([]string, error) {
-	remotes, err := c.repo.Remotes()
+func (r *repository) ListRemoteNames() ([]string, error) {
+	remotes, err := r.repo.Remotes()
 	if err != nil {
 		return nil, err
 	}
@@ -35,8 +44,8 @@ func (c *config) ListRemoteNames() ([]string, error) {
 	return result, nil
 }
 
-func (c *config) GetRemoteURL(remoteName string) (string, error) {
-	remote, err := c.repo.Remote(remoteName)
+func (r *repository) GetRemoteURL(remoteName string) (string, error) {
+	remote, err := r.repo.Remote(remoteName)
 	if err != nil {
 		return "", err
 	}
@@ -44,15 +53,15 @@ func (c *config) GetRemoteURL(remoteName string) (string, error) {
 	return remote.Config().URLs[0], nil
 }
 
-func (c *config) Clean() error {
-	cfg, err := c.repo.Config()
+func (r *repository) Clean() error {
+	cfg, err := r.repo.Config()
 	if err != nil {
 		return err
 	}
 
 	cfg.Raw.RemoveSection("github-pr")
 
-	err = c.repo.Storer.SetConfig(cfg)
+	err = r.repo.Storer.SetConfig(cfg)
 	if err != nil {
 		return err
 	}

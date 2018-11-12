@@ -39,7 +39,6 @@ func convertPulRequest(pr *github.PullRequest) *git.PullRequest {
 		WebURL:   *pr.HTMLURL,
 		Remote:   *pr.Base.Repo.FullName,
 		Title:    *pr.Title,
-		InSync:   false,
 		Comment:  "",
 	}
 }

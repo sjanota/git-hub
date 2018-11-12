@@ -20,7 +20,6 @@ type PullRequest struct {
 	Remote   string
 	Title    string
 	Comment  string
-	InSync   bool
 }
 
 const (
@@ -30,7 +29,6 @@ const (
 	pullRequestHeadRef  = "headRef"
 	pullRequestHeadRepo = "headRepo"
 	pullRequestWebUrl   = "webUrl"
-	pullRequestInSync   = "inSync"
 )
 
 func (r *repository) ListPullRequests() ([]*PullRequest, error) {
@@ -65,8 +63,7 @@ func (r *repository) StorePullRequest(pr *PullRequest) error {
 		SetOption(pullRequestComment, strings.Replace(pr.Comment, "\n", "\\n", -1)).
 		SetOption(pullRequestHeadRef, pr.HeadRef).
 		SetOption(pullRequestHeadRepo, pr.HeadRepo).
-		SetOption(pullRequestWebUrl, pr.WebURL).
-		SetOption(pullRequestInSync, fmt.Sprintf("%v", pr.InSync))
+		SetOption(pullRequestWebUrl, pr.WebURL)
 
 	err = r.repo.Storer.SetConfig(cfg)
 	if err != nil {
@@ -112,11 +109,6 @@ func readPullRequestFromSubsection(subsection *git_config.Subsection) (*PullRequ
 		return nil, err
 	}
 
-	inSync, err := strconv.ParseBool(subsection.Option(pullRequestInSync))
-	if err != nil {
-		return &PullRequest{}, err
-	}
-
 	return &PullRequest{
 		Title:    subsection.Option(pullRequestTitle),
 		Comment:  strings.Replace(subsection.Option(pullRequestComment), "\\n", "\n", -1),
@@ -125,7 +117,6 @@ func readPullRequestFromSubsection(subsection *git_config.Subsection) (*PullRequ
 		Number:   number,
 		WebURL:   subsection.Option(pullRequestWebUrl),
 		Remote:   name[0],
-		InSync:   inSync,
 	}, nil
 }
 

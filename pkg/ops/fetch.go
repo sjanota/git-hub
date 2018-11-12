@@ -42,7 +42,6 @@ func FetchPullRequests(repo git.Repo, remotesLister git.RemotesLister) error {
 			oldPr, err := repo.GetPullRequest(url.Path, pr.Number)
 			if _, ok := err.(git.PullRequestNotFound); err != nil && ok {
 				pr.Comment = oldPr.Comment
-				pr.InSync = oldPr.InSync
 			} else if err != nil {
 				return err
 			}

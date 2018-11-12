@@ -12,7 +12,7 @@ func Push(repo git.Repo) error {
 		return err
 	}
 
-	if pr.InSync {
+	if pr.Comment == "" {
 		fmt.Println("Already up-to-date")
 		return nil
 	}
@@ -38,6 +38,6 @@ func Push(repo git.Repo) error {
 		return err
 	}
 
-	pr.InSync = true
+	pr.Comment = ""
 	return repo.StorePullRequest(pr)
 }

@@ -18,14 +18,11 @@ func Status(repo git.Repo) error {
 	fmt.Printf("On pull request %s#%v\n", pr.Remote, pr.Number)
 	fmt.Printf("    %s\n", pr.Title)
 	fmt.Println()
-	if pr.InSync {
+	if pr.Comment == "" {
 		fmt.Printf("Pull request %s#%v is in sync with GitHub\n", pr.Remote, pr.Number)
 	} else {
-		fmt.Printf("Pull request %s#%v is not pushed\n", pr.Remote, pr.Number)
-		fmt.Printf(`    (use "git hub push" to push changes to GitHub)\n`)
-	}
-	fmt.Println()
-	if pr.Comment != "" {
+		fmt.Printf("Pull request %s#%v is not out-of-sync\n", pr.Remote, pr.Number)
+		fmt.Printf(`    (use "git hub push" to push comment to GitHub)\n`)
 		fmt.Println("Comment:")
 		for _, line := range strings.Split(pr.Comment, "\n") {
 			fmt.Printf("    %s\n", line)

@@ -7,15 +7,17 @@ import (
 )
 
 type root struct {
-	repo git.Repo
+	repo    git.Repo
+	details *bool
 }
 
 func (r *root) Configure(app *cli.Cli) {
+	r.details = app.BoolOpt("details d", false, "Adds more details to output")
 	app.Action = r.action
 }
 
 func (r root) action() {
-	err := ops.List(r.repo)
+	err := ops.List(r.repo, *r.details)
 	if err != nil {
 		panic(err)
 	}

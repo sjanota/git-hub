@@ -3,9 +3,10 @@ package ops
 import (
 	"fmt"
 	"github.com/sjanota/git-hub/pkg/git"
+	"strings"
 )
 
-func List(repo git.Repo) error {
+func List(repo git.Repo, details bool) error {
 	prs, err := repo.ListPullRequests()
 	if err != nil {
 		return err
@@ -21,6 +22,14 @@ func List(repo git.Repo) error {
 			fmt.Printf("* %-6v %-32s %s\n", pr.Number, pr.HeadRef, pr.Title)
 		} else {
 			fmt.Printf("  %-6v %-32s %s\n", pr.Number, pr.HeadRef, pr.Title)
+		}
+
+		if details && pr.Comment != "" {
+			lines := strings.Split(pr.Comment, "\n")
+			fmt.Println(statusCommentHeaderPadding, lines[0])
+			for _, line := range lines[1:] {
+				fmt.Println(statusCommentPadding, line)
+			}
 		}
 	}
 

@@ -7,21 +7,17 @@ import (
 )
 
 func (c *config) GetDefaultTextEditor() (string, error) {
-	editor, err := getCoreEditorFromConfig()
-	if err != nil {
+	if editor, err := getCoreEditorFromConfig(); err != nil {
 		return "", err
-	}
-	if editor != "" {
+	} else if editor != "" {
 		return editor, nil
 	}
 
-	editor = getEditorFromEnv()
-	if editor != "" {
+	if editor := getEditorFromEnv(); editor != "" {
 		return editor, nil
 	}
 
 	return getFallbackEditor(), nil
-
 }
 
 // Calls 'git config' because go-git does not resolve global config

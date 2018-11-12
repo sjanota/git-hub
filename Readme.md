@@ -47,7 +47,7 @@ Opens PR for currently checked out branch in your default browser.
 
 ### `git pr comment`
 
-`git pr comment` allows you to edit comment locally before publishing it. The idea is to make notes with progress on 
+Allows you to edit comment locally before publishing it. The idea is to make notes with progress on 
 your local machine, where you develop and once you're ready (e.g. before leaving office) publish them to GitHub.
 
 Usage:

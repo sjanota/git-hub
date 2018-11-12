@@ -6,7 +6,7 @@ import (
 )
 
 type Config interface {
-	StorePullRequest(remote string, request *PullRequest) error
+	StorePullRequest(request *PullRequest) error
 	Clean() error
 	GetRemoteURL(remote string) (string, error)
 	ListRemoteNames() ([]string, error)

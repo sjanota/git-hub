@@ -34,7 +34,7 @@ func FetchPullRequests(cfg config.Config, remotesLister config.RemotesLister) er
 		}
 
 		for pr := range prs.Iter() {
-			err := cfg.StorePullRequest("kyma", pr)
+			err := cfg.StorePullRequest(pr)
 			if err != nil {
 				return err
 			}

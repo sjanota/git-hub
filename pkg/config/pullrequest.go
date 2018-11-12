@@ -46,20 +46,20 @@ func (c *gitConfig) ListPullRequests() ([]*PullRequest, error) {
 	return result, nil
 }
 
-func (c *gitConfig) StorePullRequest(remote string, request *PullRequest) error {
+func (c *gitConfig) StorePullRequest(pr *PullRequest) error {
 	cfg, err := c.repo.Config()
 	if err != nil {
 		return err
 	}
 
-	subsection := fmt.Sprintf("%s:%v", remote, request.Number)
+	subsection := fmt.Sprintf("%s:%v", pr.Remote, pr.Number)
 
 	cfg.Raw.Section(pullRequestSection).Subsection(subsection).
-		SetOption(pullRequestTitle, request.Title).
-		SetOption(pullRequestComment, request.Comment).
-		SetOption(pullRequestHeadRef, request.HeadRef).
-		SetOption(pullRequestHeadRepo, request.HeadRepo).
-		SetOption(pullRequestWebUrl, request.WebURL)
+		SetOption(pullRequestTitle, pr.Title).
+		SetOption(pullRequestComment, pr.Comment).
+		SetOption(pullRequestHeadRef, pr.HeadRef).
+		SetOption(pullRequestHeadRepo, pr.HeadRepo).
+		SetOption(pullRequestWebUrl, pr.WebURL)
 
 	err = c.repo.Storer.SetConfig(cfg)
 	if err != nil {

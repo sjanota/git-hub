@@ -8,8 +8,9 @@ import (
 func Commands(cfg config.Config) []cli.Command {
 	return []cli.Command{
 		&fetch{cfg: cfg},
-		&clean{},
+		&clean{cfg: cfg},
 		&open{cfg: cfg},
 		&status{cfg: cfg},
+		&comments{cfg: cfg},
 	}
 }

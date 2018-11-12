@@ -24,6 +24,7 @@ func (c *config) GetDefaultTextEditor() (string, error) {
 
 }
 
+// Calls 'git config' because go-git does not resolve global config
 func getCoreEditorFromConfig() (string, error) {
 	cmd := exec.Command("git", "config", "core.editor")
 

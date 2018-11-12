@@ -2,8 +2,8 @@ package ops
 
 import (
 	"github.com/pkg/errors"
-	"github.com/sjanota/git-hub/pkg/git"
-	"github.com/sjanota/git-hub/pkg/github"
+	"github.com/sjanota/git-pr/pkg/git"
+	"github.com/sjanota/git-pr/pkg/github"
 )
 
 func FetchPullRequests(repo git.Repo, remotesLister git.RemotesLister) error {

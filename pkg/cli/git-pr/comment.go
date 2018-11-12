@@ -1,9 +1,9 @@
-package git_hub
+package git_pr
 
 import (
 	"github.com/jawher/mow.cli"
-	"github.com/sjanota/git-hub/pkg/git"
-	"github.com/sjanota/git-hub/pkg/ops"
+	"github.com/sjanota/git-pr/pkg/git"
+	"github.com/sjanota/git-pr/pkg/ops"
 )
 
 type comment struct {

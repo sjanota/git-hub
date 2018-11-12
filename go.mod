@@ -1,4 +1,4 @@
-module github.com/sjanota/git-hub
+module github.com/sjanota/git-pr
 
 require (
 	github.com/google/go-github/v18 v18.2.0

@@ -2,8 +2,8 @@ package ops
 
 import (
 	"fmt"
-	"github.com/sjanota/git-hub/pkg/git"
-	"github.com/sjanota/git-hub/pkg/github"
+	"github.com/sjanota/git-pr/pkg/git"
+	"github.com/sjanota/git-pr/pkg/github"
 )
 
 func Push(repo git.Repo) error {

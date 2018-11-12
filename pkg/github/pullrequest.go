@@ -2,7 +2,7 @@ package github
 
 import (
 	"github.com/google/go-github/v18/github"
-	"github.com/sjanota/git-hub/pkg/git"
+	"github.com/sjanota/git-pr/pkg/git"
 )
 
 type PullRequestFilter struct {

@@ -1,8 +1,8 @@
-package git_hub
+package git_pr
 
 import (
-	"github.com/sjanota/git-hub/pkg/cli"
-	"github.com/sjanota/git-hub/pkg/git"
+	"github.com/sjanota/git-pr/pkg/cli"
+	"github.com/sjanota/git-pr/pkg/git"
 )
 
 func Commands(repo git.Repo) []cli.Command {

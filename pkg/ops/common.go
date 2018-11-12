@@ -1,6 +1,6 @@
 package ops
 
-import "github.com/sjanota/git-hub/pkg/git"
+import "github.com/sjanota/git-pr/pkg/git"
 
 func getPullRequestForCurrentBranch(repo git.Repo) (*git.PullRequest, error) {
 	branch, err := repo.GetCurrentBranch()

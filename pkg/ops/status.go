@@ -2,7 +2,7 @@ package ops
 
 import (
 	"fmt"
-	"github.com/sjanota/git-hub/pkg/git"
+	"github.com/sjanota/git-pr/pkg/git"
 	"strings"
 )
 
@@ -22,7 +22,7 @@ func Status(repo git.Repo) error {
 		fmt.Printf("Pull request %s#%v is in sync with GitHub\n", pr.Remote, pr.Number)
 	} else {
 		fmt.Printf("Pull request %s#%v is not out-of-sync\n", pr.Remote, pr.Number)
-		fmt.Printf(`    (use "git hub push" to push comment to GitHub)\n`)
+		fmt.Printf(`    (use "git pr push" to push comment to GitHub)\n`)
 		fmt.Println("Comment:")
 		for _, line := range strings.Split(pr.Comment, "\n") {
 			fmt.Printf("    %s\n", line)

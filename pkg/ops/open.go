@@ -1,7 +1,7 @@
 package ops
 
 import (
-	"github.com/sjanota/git-hub/pkg/git"
+	"github.com/sjanota/git-pr/pkg/git"
 	"github.com/sjanota/open-golang/open"
 )
 

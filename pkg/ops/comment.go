@@ -2,7 +2,7 @@ package ops
 
 import (
 	"fmt"
-	"github.com/sjanota/git-hub/pkg/git"
+	"github.com/sjanota/git-pr/pkg/git"
 )
 
 func Comment(repo git.Repo, editor git.CommentEditor) error {

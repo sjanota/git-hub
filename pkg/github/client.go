@@ -3,7 +3,7 @@ package github
 import (
 	"context"
 	"github.com/google/go-github/v18/github"
-	"github.com/sjanota/git-hub/pkg/git"
+	"github.com/sjanota/git-pr/pkg/git"
 	"net/http"
 	"time"
 )

@@ -1,15 +1,25 @@
-package config
+package git
 
 import (
 	"github.com/pkg/errors"
 	"gopkg.in/src-d/go-git.v4"
 )
 
-type gitConfig struct {
+type config struct {
 	repo *git.Repository
 }
 
-func (c *gitConfig) GetCurrentBranch() (string, error) {
+func (c *config) GetDefaultTextEditor() (string, error) {
+	cfg, err := c.repo.Config()
+	if err != nil {
+		return "", err
+	}
+
+	cfgEditor := cfg.Raw.Section("core").Option("editor")
+	return cfgEditor, nil
+}
+
+func (c *config) GetCurrentBranch() (string, error) {
 	ref, err := c.repo.Head()
 	if err != nil {
 		return "", err
@@ -22,7 +32,7 @@ func (c *gitConfig) GetCurrentBranch() (string, error) {
 	return ref.Name().Short(), nil
 }
 
-func (c *gitConfig) ListRemoteNames() ([]string, error) {
+func (c *config) ListRemoteNames() ([]string, error) {
 	remotes, err := c.repo.Remotes()
 	if err != nil {
 		return nil, err
@@ -35,7 +45,7 @@ func (c *gitConfig) ListRemoteNames() ([]string, error) {
 	return result, nil
 }
 
-func (c *gitConfig) GetRemoteURL(remoteName string) (string, error) {
+func (c *config) GetRemoteURL(remoteName string) (string, error) {
 	remote, err := c.repo.Remote(remoteName)
 	if err != nil {
 		return "", err
@@ -44,7 +54,7 @@ func (c *gitConfig) GetRemoteURL(remoteName string) (string, error) {
 	return remote.Config().URLs[0], nil
 }
 
-func (c *gitConfig) Clean() error {
+func (c *config) Clean() error {
 	cfg, err := c.repo.Config()
 	if err != nil {
 		return err

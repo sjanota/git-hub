@@ -2,11 +2,11 @@ package ops
 
 import (
 	"github.com/pkg/errors"
-	"github.com/sjanota/git-hub/pkg/config"
+	"github.com/sjanota/git-hub/pkg/git"
 	"github.com/sjanota/git-hub/pkg/github"
 )
 
-func FetchPullRequests(cfg config.Config, remotesLister config.RemotesLister) error {
+func FetchPullRequests(cfg git.Config, remotesLister git.RemotesLister) error {
 	gh := github.NewClient()
 	remotes, err := remotesLister.List(cfg)
 	if err != nil {

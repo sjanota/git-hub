@@ -2,12 +2,12 @@ package git_hub
 
 import (
 	"github.com/jawher/mow.cli"
-	"github.com/sjanota/git-hub/pkg/config"
+	"github.com/sjanota/git-hub/pkg/git"
 	"github.com/sjanota/git-hub/pkg/ops"
 )
 
 type status struct {
-	cfg config.Config
+	cfg git.Config
 }
 
 func (s *status) Configure(app *cli.Cli) {

@@ -1,11 +1,11 @@
 package ops
 
 import (
-	"github.com/sjanota/git-hub/pkg/config"
+	"github.com/sjanota/git-hub/pkg/git"
 	"github.com/sjanota/open-golang/open"
 )
 
-func Open(cfg config.Config) error {
+func Open(cfg git.Config) error {
 	pr, err := getPullRequestForCurrentBranch(cfg)
 	if err != nil {
 		return err

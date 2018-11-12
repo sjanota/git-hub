@@ -2,12 +2,12 @@ package git_hub
 
 import (
 	"github.com/jawher/mow.cli"
-	"github.com/sjanota/git-hub/pkg/config"
+	"github.com/sjanota/git-hub/pkg/git"
 	"github.com/sjanota/git-hub/pkg/ops"
 )
 
 type fetch struct {
-	cfg    config.Config
+	cfg    git.Config
 	remote *string
 	all    *bool
 }
@@ -23,11 +23,11 @@ func (f *fetch) Configure(app *cli.Cli) {
 }
 
 func (f *fetch) action() {
-	var remotes config.RemotesLister
+	var remotes git.RemotesLister
 	if *f.all {
-		remotes = config.AllRemotesLister{}
+		remotes = git.AllRemotesLister{}
 	} else {
-		remotes = config.OneRemoteLister{Remote: *f.remote}
+		remotes = git.OneRemoteLister{Remote: *f.remote}
 	}
 
 	err := ops.FetchPullRequests(f.cfg, remotes)

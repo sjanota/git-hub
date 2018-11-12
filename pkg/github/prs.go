@@ -2,7 +2,7 @@ package github
 
 import (
 	"github.com/google/go-github/v18/github"
-	"github.com/sjanota/git-hub/pkg/config"
+	"github.com/sjanota/git-hub/pkg/git"
 )
 
 type PullRequestFilter struct {
@@ -22,7 +22,7 @@ func (f PullRequestFilter) assigneeLoginMismatch(pr *github.PullRequest) bool {
 }
 
 type PullRequests interface {
-	Iter() <-chan *config.PullRequest
+	Iter() <-chan *git.PullRequest
 }
 
 type pullRequests struct {
@@ -31,12 +31,12 @@ type pullRequests struct {
 	filter PullRequestFilter
 }
 
-func (prs *pullRequests) Iter() <-chan *config.PullRequest {
-	ch := make(chan *config.PullRequest)
+func (prs *pullRequests) Iter() <-chan *git.PullRequest {
+	ch := make(chan *git.PullRequest)
 	go func() {
 		for _, pr := range prs.prs {
 			if prs.filter.filter(pr) {
-				prConfig := &config.PullRequest{
+				prConfig := &git.PullRequest{
 					HeadRef:  *pr.Head.Ref,
 					HeadRepo: *pr.Head.Repo.FullName,
 					Number:   *pr.Number,

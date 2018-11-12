@@ -1,4 +1,4 @@
-package config
+package git
 
 type RemotesLister interface {
 	List(cfg Config) ([]string, error)

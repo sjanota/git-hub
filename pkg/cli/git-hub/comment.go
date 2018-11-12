@@ -2,13 +2,13 @@ package git_hub
 
 import (
 	"github.com/jawher/mow.cli"
-	"github.com/sjanota/git-hub/pkg/config"
+	"github.com/sjanota/git-hub/pkg/git"
 	"github.com/sjanota/git-hub/pkg/ops"
 )
 
 type comments struct {
 	comment *string
-	cfg     config.Config
+	cfg     git.Config
 }
 
 func (c *comments) Configure(app *cli.Cli) {

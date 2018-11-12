@@ -1,4 +1,4 @@
-package config
+package git
 
 import (
 	"gopkg.in/src-d/go-git.v4"
@@ -13,9 +13,10 @@ type Config interface {
 	GetCurrentBranch() (string, error)
 	GetPullRequestForBranch(branch string) (*PullRequest, error)
 	ListPullRequests() ([]*PullRequest, error)
+	GetDefaultTextEditor() (string, error)
 }
 
-func NewGitConfig() (Config, error) {
+func NewConfig() (Config, error) {
 	wd, err := os.Getwd()
 	if err != nil {
 		return nil, err
@@ -26,5 +27,5 @@ func NewGitConfig() (Config, error) {
 		return nil, err
 	}
 
-	return &gitConfig{repo}, nil
+	return &config{repo}, nil
 }

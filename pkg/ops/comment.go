@@ -1,8 +1,8 @@
 package ops
 
-import "github.com/sjanota/git-hub/pkg/config"
+import "github.com/sjanota/git-hub/pkg/git"
 
-func Comment(cfg config.Config, comment string) error {
+func Comment(cfg git.Config, comment string) error {
 	pr, err := getPullRequestForCurrentBranch(cfg)
 	if err != nil {
 		return err

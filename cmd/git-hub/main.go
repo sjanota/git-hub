@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/jawher/mow.cli"
 	"github.com/sjanota/git-hub/pkg/cli/git-hub"
-	"github.com/sjanota/git-hub/pkg/config"
+	"github.com/sjanota/git-hub/pkg/git"
 	"log"
 	"os"
 )
@@ -11,7 +11,7 @@ import (
 func main() {
 	app := cli.App("git-hub", "Use GitHub from CLI")
 
-	cfg, err := config.NewGitConfig()
+	cfg, err := git.NewConfig()
 	if err != nil {
 		log.Fatal(err)
 	}

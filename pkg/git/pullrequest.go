@@ -1,9 +1,9 @@
-package config
+package git
 
 import (
 	"fmt"
 	"github.com/pkg/errors"
-	"gopkg.in/src-d/go-git.v4/plumbing/format/config"
+	git_config "gopkg.in/src-d/go-git.v4/plumbing/format/config"
 	"strconv"
 	"strings"
 )
@@ -27,7 +27,7 @@ const (
 	pullRequestWebUrl   = "webUrl"
 )
 
-func (c *gitConfig) ListPullRequests() ([]*PullRequest, error) {
+func (c *config) ListPullRequests() ([]*PullRequest, error) {
 	cfg, err := c.repo.Config()
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (c *gitConfig) ListPullRequests() ([]*PullRequest, error) {
 	return result, nil
 }
 
-func (c *gitConfig) StorePullRequest(pr *PullRequest) error {
+func (c *config) StorePullRequest(pr *PullRequest) error {
 	cfg, err := c.repo.Config()
 	if err != nil {
 		return err
@@ -69,7 +69,7 @@ func (c *gitConfig) StorePullRequest(pr *PullRequest) error {
 	return nil
 }
 
-func (c *gitConfig) GetPullRequestForBranch(branch string) (*PullRequest, error) {
+func (c *config) GetPullRequestForBranch(branch string) (*PullRequest, error) {
 	cfg, err := c.repo.Config()
 	if err != nil {
 		return nil, err
@@ -83,7 +83,7 @@ func (c *gitConfig) GetPullRequestForBranch(branch string) (*PullRequest, error)
 	return nil, errors.Errorf("no PR for branch %s", branch)
 }
 
-func readPullRequestFromSubsection(subsection *config.Subsection) (*PullRequest, error) {
+func readPullRequestFromSubsection(subsection *git_config.Subsection) (*PullRequest, error) {
 	name := strings.Split(subsection.Name, ":")
 	number, err := strconv.Atoi(name[1])
 	if err != nil {

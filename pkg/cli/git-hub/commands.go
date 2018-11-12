@@ -2,10 +2,10 @@ package git_hub
 
 import (
 	"github.com/sjanota/git-hub/pkg/cli"
-	"github.com/sjanota/git-hub/pkg/config"
+	"github.com/sjanota/git-hub/pkg/git"
 )
 
-func Commands(cfg config.Config) []cli.Command {
+func Commands(cfg git.Config) []cli.Command {
 	return []cli.Command{
 		&fetch{cfg: cfg},
 		&clean{cfg: cfg},

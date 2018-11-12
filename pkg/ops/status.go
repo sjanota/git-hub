@@ -2,7 +2,7 @@ package ops
 
 import (
 	"fmt"
-	"github.com/sjanota/git-hub/pkg/config"
+	"github.com/sjanota/git-hub/pkg/git"
 	"strings"
 )
 
@@ -11,7 +11,7 @@ const (
 	statusCommentPadding       = "   "
 )
 
-func Status(cfg config.Config) error {
+func Status(cfg git.Config) error {
 	prs, err := cfg.ListPullRequests()
 	if err != nil {
 		return err

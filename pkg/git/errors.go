@@ -2,7 +2,10 @@ package git
 
 import "fmt"
 
-type PullRequestNotFound struct{}
+type PullRequestNotFound struct {
+	Number int
+	Remote string
+}
 
 var _ error = PullRequestNotFound{}
 

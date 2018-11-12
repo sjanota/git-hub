@@ -76,6 +76,21 @@ func (r *repository) StorePullRequest(pr *PullRequest) error {
 	return nil
 }
 
+func (r *repository) GetPullRequest(remote string, number int) (*PullRequest, error) {
+	cfg, err := r.repo.Config()
+	if err != nil {
+		return nil, err
+	}
+
+	subsection := fmt.Sprintf("%s:%v", remote, number)
+
+	if !cfg.Raw.Section(pullRequestSection).HasSubsection(subsection) {
+		return nil, &PullRequestNotFound{Remote: remote, Number: number}
+	}
+
+	return readPullRequestFromSubsection(cfg.Raw.Section(pullRequestSection).Subsection(subsection))
+}
+
 func (r *repository) GetPullRequestForBranch(branch string) (*PullRequest, error) {
 	cfg, err := r.repo.Config()
 	if err != nil {

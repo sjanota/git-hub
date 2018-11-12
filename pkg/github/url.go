@@ -11,6 +11,7 @@ type URL struct {
 	Owner          string
 	RepositoryName string
 	Full           string
+	Path           string
 }
 
 func RepoURL(path string) (*URL, error) {
@@ -35,5 +36,10 @@ func ParseURL(s string) (*URL, error) {
 		return nil, fmt.Errorf("invalid remote path %s", url.Path)
 	}
 
-	return &URL{Owner: path[1], RepositoryName: path[2], Full: s}, nil
+	return &URL{
+		Owner:          path[1],
+		RepositoryName: path[2],
+		Full:           s,
+		Path:           strings.TrimLeft(url.Path, "/"),
+	}, nil
 }

@@ -34,15 +34,7 @@ func FetchPullRequests(cfg config.Config, remotesLister config.RemotesLister) er
 		}
 
 		for pr := range prs.Iter() {
-			prConfig := &config.PullRequest{
-				HeadRef:  *pr.Head.Ref,
-				HeadRepo: *pr.Head.Repo.FullName,
-				Number:   *pr.Number,
-				WebURL:   *pr.HTMLURL,
-				Remote:   remote,
-				Title:    *pr.Title,
-			}
-			err := cfg.StorePullRequest("kyma", prConfig)
+			err := cfg.StorePullRequest("kyma", pr)
 			if err != nil {
 				return err
 			}

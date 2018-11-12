@@ -6,6 +6,11 @@ import (
 	"strings"
 )
 
+const (
+	listCommentHeaderPadding = "└──"
+	listCommentPadding       = "   "
+)
+
 func List(repo git.Repo, details bool) error {
 	prs, err := repo.ListPullRequests()
 	if err != nil {
@@ -26,9 +31,9 @@ func List(repo git.Repo, details bool) error {
 
 		if details && pr.Comment != "" {
 			lines := strings.Split(pr.Comment, "\n")
-			fmt.Println(statusCommentHeaderPadding, lines[0])
+			fmt.Println(listCommentHeaderPadding, lines[0])
 			for _, line := range lines[1:] {
-				fmt.Println(statusCommentPadding, line)
+				fmt.Println(listCommentPadding, line)
 			}
 		}
 	}

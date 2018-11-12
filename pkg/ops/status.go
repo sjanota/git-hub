@@ -6,35 +6,29 @@ import (
 	"strings"
 )
 
-const (
-	statusCommentHeaderPadding = "└──"
-	statusCommentPadding       = "   "
-)
-
 func Status(repo git.Repo) error {
-	prs, err := repo.ListPullRequests()
-	if err != nil {
+	pr, err := getPullRequestForCurrentBranch(repo)
+	if _, ok := err.(git.NoPullRequestForBranch); err != nil && ok {
+		fmt.Println("No pull request for current branch")
+		return nil
+	} else if err != nil {
 		return err
 	}
 
-	currentPr, err := getPullRequestForCurrentBranch(repo)
-	if _, ok := err.(git.NoPullRequestForBranch); err != nil && !ok {
-		return err
+	fmt.Printf("On pull request %s#%v\n", pr.Remote, pr.Number)
+	fmt.Printf("    %s\n", pr.Title)
+	fmt.Println()
+	if pr.InSync {
+		fmt.Printf("Pull request %s#%v is in sync with GitHub\n", pr.Remote, pr.Number)
+	} else {
+		fmt.Printf("Pull request %s#%v is not pushed\n", pr.Remote, pr.Number)
+		fmt.Printf(`    (use "git hub push" to push changes to GitHub)\n`)
 	}
-
-	for _, pr := range prs {
-		if currentPr != nil && pr.Number == currentPr.Number {
-			fmt.Printf("* %-6v %-32s %s\n", pr.Number, pr.HeadRef, pr.Title)
-		} else {
-			fmt.Printf("  %-6v %-32s %s\n", pr.Number, pr.HeadRef, pr.Title)
-		}
-
-		if pr.Comment != "" {
-			lines := strings.Split(pr.Comment, "\n")
-			fmt.Println(statusCommentHeaderPadding, lines[0])
-			for _, line := range lines[1:] {
-				fmt.Println(statusCommentPadding, line)
-			}
+	fmt.Println()
+	if pr.Comment != "" {
+		fmt.Println("Comment:")
+		for _, line := range strings.Split(pr.Comment, "\n") {
+			fmt.Printf("    %s\n", line)
 		}
 	}
 

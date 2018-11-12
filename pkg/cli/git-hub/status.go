@@ -12,11 +12,13 @@ type status struct {
 
 func (s *status) Configure(app *cli.Cli) {
 	app.Command("status", "See status of pull requests", func(cmd *cli.Cmd) {
-		cmd.Action = func() {
-			err := ops.Status(s.repo)
-			if err != nil {
-				panic(err)
-			}
-		}
+		cmd.Action = s.action
 	})
+}
+
+func (s status) action() {
+	err := ops.Status(s.repo)
+	if err != nil {
+		panic(err)
+	}
 }

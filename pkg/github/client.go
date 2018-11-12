@@ -9,7 +9,8 @@ import (
 )
 
 type Client interface {
-	GetPullRequests(owner, repo string, filter PullRequestFilter) (PullRequests, error)
+	GetPullRequests(url *URL, filter PullRequestFilter) (PullRequests, error)
+	PushPullRequestComment(url *URL, pr git.PullRequest) error
 }
 
 type client struct {
@@ -32,9 +33,16 @@ func NewClient(credentials *git.Credentials) Client {
 	}
 }
 
-func (c client) GetPullRequests(owner, repo string, filter PullRequestFilter) (PullRequests, error) {
+func (c client) PushPullRequestComment(url *URL, pr git.PullRequest) error {
+	_, _, err := c.gh.Issues.CreateComment(context.Background(), url.Owner, url.RepositoryName, pr.Number, &github.IssueComment{
+		Body: &pr.Comment,
+	})
+	return err
+}
 
-	prs, _, err := c.gh.PullRequests.List(context.Background(), owner, repo, &github.PullRequestListOptions{
+func (c client) GetPullRequests(url *URL, filter PullRequestFilter) (PullRequests, error) {
+
+	prs, _, err := c.gh.PullRequests.List(context.Background(), url.Owner, url.RepositoryName, &github.PullRequestListOptions{
 		State: "open",
 	})
 

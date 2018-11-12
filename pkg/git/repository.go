@@ -44,15 +44,6 @@ func (r *repository) ListRemoteNames() ([]string, error) {
 	return result, nil
 }
 
-func (r *repository) GetRemoteURL(remoteName string) (string, error) {
-	remote, err := r.repo.Remote(remoteName)
-	if err != nil {
-		return "", err
-	}
-
-	return remote.Config().URLs[0], nil
-}
-
 func (r *repository) Clean() error {
 	cfg, err := r.repo.Config()
 	if err != nil {

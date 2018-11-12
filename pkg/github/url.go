@@ -10,6 +10,12 @@ import (
 type URL struct {
 	Owner          string
 	RepositoryName string
+	Full           string
+}
+
+func RepoURL(path string) (*URL, error) {
+	remoteUrl := fmt.Sprintf("https://github.com/%s", path)
+	return ParseURL(remoteUrl)
 }
 
 func ParseURL(s string) (*URL, error) {
@@ -29,5 +35,5 @@ func ParseURL(s string) (*URL, error) {
 		return nil, fmt.Errorf("invalid remote path %s", url.Path)
 	}
 
-	return &URL{path[1], path[2]}, nil
+	return &URL{Owner: path[1], RepositoryName: path[2], Full: s}, nil
 }

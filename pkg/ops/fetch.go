@@ -30,7 +30,7 @@ func FetchPullRequests(repo git.Repo, remotesLister git.RemotesLister) error {
 			return errors.Wrapf(err, "cannot parse remote url %s", remoteUrl)
 		}
 
-		prs, err := gh.GetPullRequests(url.Owner, url.RepositoryName, github.PullRequestFilter{
+		prs, err := gh.GetPullRequests(url, github.PullRequestFilter{
 			AssigneeLogin: credentials.Username,
 		})
 

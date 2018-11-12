@@ -7,17 +7,21 @@ import (
 
 type Repo interface {
 	StorePullRequest(request *PullRequest) error
-	Clean() error
-	GetRemoteURL(remote string) (string, error)
-	ListRemoteNames() ([]string, error)
-	GetCurrentBranch() (string, error)
-	GetPullRequestForBranch(branch string) (*PullRequest, error)
 	ListPullRequests() ([]*PullRequest, error)
-	GetDefaultTextEditor() (string, error)
-	GetRootDir() (string, error)
+	GetPullRequestForBranch(branch string) (*PullRequest, error)
+
 	StaticCommentEditor(comment string, append bool) CommentEditor
 	FileCommentEditor() CommentEditor
+
+	GetRemoteURL(remote string) (string, error)
+	GetRemoteForURL(url string) (string, error)
+	ListRemoteNames() ([]string, error)
+
+	GetCurrentBranch() (string, error)
+	GetDefaultTextEditor() (string, error)
+	GetRootDir() (string, error)
 	GetCredentials(remote string) (*Credentials, error)
+	Clean() error
 }
 
 func NewConfig() (Repo, error) {

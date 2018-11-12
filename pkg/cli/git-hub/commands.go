@@ -12,5 +12,6 @@ func Commands(repo git.Repo) []cli.Command {
 		&open{repo: repo},
 		&status{repo: repo},
 		&comment{repo: repo},
+		&push{repo: repo},
 	}
 }

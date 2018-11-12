@@ -84,7 +84,7 @@ func (r *repository) GetPullRequestForBranch(branch string) (*PullRequest, error
 			return readPullRequestFromSubsection(subsection)
 		}
 	}
-	return nil, errors.Errorf("no PR for branch %s", branch)
+	return nil, NoPullRequestForBranch{Branch: branch}
 }
 
 func readPullRequestFromSubsection(subsection *git_config.Subsection) (*PullRequest, error) {

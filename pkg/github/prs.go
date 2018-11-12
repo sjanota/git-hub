@@ -31,20 +31,23 @@ type pullRequests struct {
 	filter PullRequestFilter
 }
 
+func convertPulRequest(pr *github.PullRequest) *git.PullRequest {
+	return &git.PullRequest{
+		HeadRef:  *pr.Head.Ref,
+		HeadRepo: *pr.Head.Repo.FullName,
+		Number:   *pr.Number,
+		WebURL:   *pr.HTMLURL,
+		Remote:   *pr.Base.Repo.FullName,
+		Title:    *pr.Title,
+	}
+}
+
 func (prs *pullRequests) Iter() <-chan *git.PullRequest {
 	ch := make(chan *git.PullRequest)
 	go func() {
 		for _, pr := range prs.prs {
 			if prs.filter.filter(pr) {
-				prConfig := &git.PullRequest{
-					HeadRef:  *pr.Head.Ref,
-					HeadRepo: *pr.Head.Repo.FullName,
-					Number:   *pr.Number,
-					WebURL:   *pr.HTMLURL,
-					Remote:   *pr.Base.Repo.FullName,
-					Title:    *pr.Title,
-				}
-				ch <- prConfig
+				ch <- convertPulRequest(pr)
 			}
 		}
 		close(ch)

@@ -2,24 +2,24 @@ package git
 
 import "fmt"
 
-type PullRequestNotFound struct {
+type PRNotFound struct {
 	Number int
 	Remote string
 }
 
-var _ error = PullRequestNotFound{}
+var _ error = PRNotFound{}
 
-func (PullRequestNotFound) Error() string {
+func (PRNotFound) Error() string {
 	return "pull request not found"
 }
 
-type NoPullRequestForBranch struct {
+type NoPRForBranch struct {
 	Branch string
 }
 
-var _ error = NoPullRequestForBranch{}
+var _ error = NoPRForBranch{}
 
-func (e NoPullRequestForBranch) Error() string {
+func (e NoPRForBranch) Error() string {
 	return fmt.Sprintf("no pull request for branch '%s'", e.Branch)
 }
 

@@ -23,15 +23,15 @@ type PullRequest struct {
 }
 
 const (
-	pullRequestSection  = "github-pr"
-	pullRequestTitle    = "title"
-	pullRequestComment  = "comment"
-	pullRequestHeadRef  = "headRef"
-	pullRequestHeadRepo = "headRepo"
-	pullRequestWebUrl   = "webUrl"
+	prSection  = "github-pr"
+	prTitle    = "title"
+	prComment  = "comment"
+	prHeadRef  = "headRef"
+	prHeadRepo = "headRepo"
+	prWebUrl   = "webUrl"
 )
 
-func (r *repository) ListPullRequests() ([]*PullRequest, error) {
+func (r *repository) ListPRs() ([]*PullRequest, error) {
 	cfg, err := r.repo.Config()
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func (r *repository) ListPullRequests() ([]*PullRequest, error) {
 	result := make([]*PullRequest, len(subsections))
 
 	for i, subsection := range subsections {
-		result[i], err = readPullRequestFromSubsection(subsection)
+		result[i], err = readPRFromSubsection(subsection)
 		if err != nil {
 			return nil, err
 		}
@@ -50,7 +50,7 @@ func (r *repository) ListPullRequests() ([]*PullRequest, error) {
 	return result, nil
 }
 
-func (r *repository) StorePullRequest(pr *PullRequest) error {
+func (r *repository) StorePR(pr *PullRequest) error {
 	cfg, err := r.repo.Config()
 	if err != nil {
 		return err
@@ -58,12 +58,12 @@ func (r *repository) StorePullRequest(pr *PullRequest) error {
 
 	subsection := fmt.Sprintf("%s:%v", pr.Remote, pr.Number)
 
-	cfg.Raw.Section(pullRequestSection).Subsection(subsection).
-		SetOption(pullRequestTitle, pr.Title).
-		SetOption(pullRequestComment, strings.Replace(pr.Comment, "\n", "\\n", -1)).
-		SetOption(pullRequestHeadRef, pr.HeadRef).
-		SetOption(pullRequestHeadRepo, pr.HeadRepo).
-		SetOption(pullRequestWebUrl, pr.WebURL)
+	cfg.Raw.Section(prSection).Subsection(subsection).
+		SetOption(prTitle, pr.Title).
+		SetOption(prComment, strings.Replace(pr.Comment, "\n", "\\n", -1)).
+		SetOption(prHeadRef, pr.HeadRef).
+		SetOption(prHeadRepo, pr.HeadRepo).
+		SetOption(prWebUrl, pr.WebURL)
 
 	err = r.repo.Storer.SetConfig(cfg)
 	if err != nil {
@@ -73,7 +73,7 @@ func (r *repository) StorePullRequest(pr *PullRequest) error {
 	return nil
 }
 
-func (r *repository) GetPullRequest(remote string, number int) (*PullRequest, error) {
+func (r *repository) GetPR(remote string, number int) (*PullRequest, error) {
 	cfg, err := r.repo.Config()
 	if err != nil {
 		return nil, err
@@ -81,14 +81,14 @@ func (r *repository) GetPullRequest(remote string, number int) (*PullRequest, er
 
 	subsection := fmt.Sprintf("%s:%v", remote, number)
 
-	if !cfg.Raw.Section(pullRequestSection).HasSubsection(subsection) {
-		return nil, PullRequestNotFound{Remote: remote, Number: number}
+	if !cfg.Raw.Section(prSection).HasSubsection(subsection) {
+		return nil, PRNotFound{Remote: remote, Number: number}
 	}
 
-	return readPullRequestFromSubsection(cfg.Raw.Section(pullRequestSection).Subsection(subsection))
+	return readPRFromSubsection(cfg.Raw.Section(prSection).Subsection(subsection))
 }
 
-func (r *repository) GetPullRequestForBranch(branch string) (*PullRequest, error) {
+func (r *repository) GetPRForBranch(branch string) (*PullRequest, error) {
 	cfg, err := r.repo.Config()
 	if err != nil {
 		return nil, err
@@ -96,13 +96,13 @@ func (r *repository) GetPullRequestForBranch(branch string) (*PullRequest, error
 
 	for _, subsection := range cfg.Raw.Section("github-pr").Subsections {
 		if subsection.Option("headRef") == branch {
-			return readPullRequestFromSubsection(subsection)
+			return readPRFromSubsection(subsection)
 		}
 	}
-	return nil, NoPullRequestForBranch{Branch: branch}
+	return nil, NoPRForBranch{Branch: branch}
 }
 
-func readPullRequestFromSubsection(subsection *git_config.Subsection) (*PullRequest, error) {
+func readPRFromSubsection(subsection *git_config.Subsection) (*PullRequest, error) {
 	name := strings.Split(subsection.Name, ":")
 	number, err := strconv.Atoi(name[1])
 	if err != nil {
@@ -110,12 +110,12 @@ func readPullRequestFromSubsection(subsection *git_config.Subsection) (*PullRequ
 	}
 
 	return &PullRequest{
-		Title:    subsection.Option(pullRequestTitle),
-		Comment:  strings.Replace(subsection.Option(pullRequestComment), "\\n", "\n", -1),
-		HeadRef:  subsection.Option(pullRequestHeadRef),
-		HeadRepo: subsection.Option(pullRequestHeadRepo),
+		Title:    subsection.Option(prTitle),
+		Comment:  strings.Replace(subsection.Option(prComment), "\\n", "\n", -1),
+		HeadRef:  subsection.Option(prHeadRef),
+		HeadRepo: subsection.Option(prHeadRepo),
 		Number:   number,
-		WebURL:   subsection.Option(pullRequestWebUrl),
+		WebURL:   subsection.Option(prWebUrl),
 		Remote:   name[0],
 	}, nil
 }

@@ -7,8 +7,8 @@ import (
 )
 
 func Status(repo git.Repo) error {
-	pr, err := getPullRequestForCurrentBranch(repo)
-	if _, ok := err.(git.NoPullRequestForBranch); ok {
+	pr, err := getPRForCurrentBranch(repo)
+	if _, ok := err.(git.NoPRForBranch); ok {
 		fmt.Println("No pull request for current branch")
 		return nil
 	} else if err != nil {

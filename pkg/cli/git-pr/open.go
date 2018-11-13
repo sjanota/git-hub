@@ -17,8 +17,13 @@ func (o *open) Configure(app *cli.Cli) {
 	app.Command("open", "Opens pull request page in your default browser", func(cmd *cli.Cmd) {
 		cmd.Spec = "[-p | -b]"
 
-		o.pr = cmd.IntOpt("pr p", 0, "Number of PR to open")
-		o.branch = cmd.StringOpt("branch b", "", "Number of PR to open")
+		o.pr = cmd.Int(cli.IntOpt{
+			Name:      "pr p",
+			Value:     0,
+			HideValue: true,
+			Desc:      "Number of PR to open",
+		})
+		o.branch = cmd.StringOpt("branch b", "", "Name of branch of PR to open")
 
 		cmd.Action = o.action
 	})

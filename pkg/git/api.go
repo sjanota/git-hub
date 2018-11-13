@@ -19,6 +19,8 @@ type Repo interface {
 	ListRemoteNames() ([]string, error)
 
 	GetCurrentBranch() (string, error)
+	GetBranchRemote(branch string) (string, error)
+
 	GetDefaultTextEditor() (string, error)
 	GetRootDir() (string, error)
 	GetCredentials(remote string) (*Credentials, error)

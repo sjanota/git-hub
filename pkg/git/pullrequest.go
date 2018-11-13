@@ -82,7 +82,7 @@ func (r *repository) GetPullRequest(remote string, number int) (*PullRequest, er
 	subsection := fmt.Sprintf("%s:%v", remote, number)
 
 	if !cfg.Raw.Section(pullRequestSection).HasSubsection(subsection) {
-		return nil, &PullRequestNotFound{Remote: remote, Number: number}
+		return nil, PullRequestNotFound{Remote: remote, Number: number}
 	}
 
 	return readPullRequestFromSubsection(cfg.Raw.Section(pullRequestSection).Subsection(subsection))
@@ -160,7 +160,7 @@ func (e fileCommentEditor) Edit(pr *PullRequest) (string, error) {
 	if err != nil {
 		return "", errors.Wrapf(err, "cannot create temp file %s", fileName)
 	}
-	defer os.Remove(f.Name())
+	defer func() { _ = os.Remove(f.Name()) }()
 
 	_, err = f.WriteString(pr.Comment)
 	if err != nil {

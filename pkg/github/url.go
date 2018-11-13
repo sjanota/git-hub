@@ -1,8 +1,8 @@
 package github
 
 import (
-	"errors"
 	"fmt"
+	"github.com/pkg/errors"
 	std_url "net/url"
 	"strings"
 )
@@ -26,20 +26,19 @@ func ParseURL(s string) (*URL, error) {
 	}
 
 	if url.Host != "github.com" {
-		return nil, errors.New("not GitHub URL")
+		return nil, errors.Errorf("not GitHub URL %s", s)
 	}
 
-	path := strings.Split(url.Path, "/")
-
-	// There is a leading slash in url.Path
-	if len(path) < 3 || path[1] == "" && path[2] == "" {
+	path := strings.TrimLeft(url.Path, "/")
+	pathParts := strings.Split(path, "/")
+	if len(pathParts) < 2 || pathParts[0] == "" || pathParts[1] == "" {
 		return nil, fmt.Errorf("invalid remote path %s", url.Path)
 	}
 
 	return &URL{
-		Owner:          path[1],
-		RepositoryName: path[2],
+		Owner:          pathParts[1],
+		RepositoryName: pathParts[2],
 		Full:           s,
-		Path:           strings.TrimLeft(url.Path, "/"),
+		Path:           path,
 	}, nil
 }

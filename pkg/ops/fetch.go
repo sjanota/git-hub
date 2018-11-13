@@ -33,17 +33,17 @@ func FetchPullRequests(repo git.Repo, remotesLister git.RemotesLister) error {
 		prs, err := gh.GetPullRequests(url, github.PullRequestFilter{
 			AssigneeLogin: credentials.Username,
 		})
-
 		if err != nil {
-			return err
+			return errors.Wrap(err, "cannot get pull requests")
 		}
 
 		for pr := range prs.Iter() {
 			oldPr, err := repo.GetPullRequest(url.Path, pr.Number)
-			if _, ok := err.(git.PullRequestNotFound); err != nil && ok {
-				pr.Comment = oldPr.Comment
-			} else if err != nil {
+			if _, ok := err.(git.PullRequestNotFound); !ok {
 				return err
+			}
+			if oldPr != nil {
+				pr.Comment = oldPr.Comment
 			}
 
 			err = repo.StorePullRequest(pr)

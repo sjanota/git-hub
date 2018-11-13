@@ -6,8 +6,8 @@ import (
 )
 
 func Comment(repo git.Repo, editor git.CommentEditor) error {
-	pr, err := getPullRequestForCurrentBranch(repo)
-	if _, ok := err.(git.NoPullRequestForBranch); ok {
+	pr, err := getPRForCurrentBranch(repo)
+	if _, ok := err.(git.NoPRForBranch); ok {
 		fmt.Println("No pull request for current branch")
 		return nil
 	} else if err != nil {
@@ -21,5 +21,5 @@ func Comment(repo git.Repo, editor git.CommentEditor) error {
 
 	pr.Comment = comment
 
-	return repo.StorePullRequest(pr)
+	return repo.StorePR(pr)
 }

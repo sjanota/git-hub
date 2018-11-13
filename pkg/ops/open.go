@@ -7,9 +7,9 @@ import (
 	"github.com/sjanota/open-golang/open"
 )
 
-func Open(prProvider PullRequestProvider) error {
+func Open(prProvider PRProvider) error {
 	pr, err := prProvider.Get()
-	if noPrErr, ok := err.(git.NoPullRequestForBranch); ok {
+	if noPrErr, ok := err.(git.NoPRForBranch); ok {
 		fmt.Printf("There is no pull request associated with branch '%s'\n", noPrErr.Branch)
 		fmt.Println("    (use \"git pr fetch\" to get pull request if it exists)")
 		fmt.Println("    (use \"git pr create\" to create pull request for current branch)")
@@ -26,17 +26,17 @@ func Open(prProvider PullRequestProvider) error {
 	return nil
 }
 
-type PullRequestProvider interface {
+type PRProvider interface {
 	Get() (*git.PullRequest, error)
 }
 
-type NumberPullRequestProvider struct {
+type PRByNumber struct {
 	Repo   git.Repo
 	Number int
 }
 
-func (p NumberPullRequestProvider) Get() (*git.PullRequest, error) {
-	prs, err := p.Repo.ListPullRequests()
+func (p PRByNumber) Get() (*git.PullRequest, error) {
+	prs, err := p.Repo.ListPRs()
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (p NumberPullRequestProvider) Get() (*git.PullRequest, error) {
 	}
 
 	if len(matches) == 0 {
-		return nil, git.PullRequestNotFound{Number: p.Number}
+		return nil, git.PRNotFound{Number: p.Number}
 	}
 	if len(matches) > 1 {
 		remotes := make([]string, len(matches))
@@ -63,19 +63,19 @@ func (p NumberPullRequestProvider) Get() (*git.PullRequest, error) {
 	return matches[0], nil
 }
 
-type BranchPullRequestProvider struct {
+type PRByBranch struct {
 	Repo   git.Repo
 	Branch string
 }
 
-func (p BranchPullRequestProvider) Get() (*git.PullRequest, error) {
-	return p.Repo.GetPullRequestForBranch(p.Branch)
+func (p PRByBranch) Get() (*git.PullRequest, error) {
+	return p.Repo.GetPRForBranch(p.Branch)
 }
 
-type CurrentBranchPullRequestProvider struct {
+type PRForCurrentBranch struct {
 	Repo git.Repo
 }
 
-func (p CurrentBranchPullRequestProvider) Get() (*git.PullRequest, error) {
-	return getPullRequestForCurrentBranch(p.Repo)
+func (p PRForCurrentBranch) Get() (*git.PullRequest, error) {
+	return getPRForCurrentBranch(p.Repo)
 }

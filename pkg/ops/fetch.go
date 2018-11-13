@@ -38,15 +38,15 @@ func FetchPullRequests(repo git.Repo, remotesLister git.RemotesLister) error {
 		}
 
 		for pr := range prs.Iter() {
-			oldPr, err := repo.GetPullRequest(url.Path, pr.Number)
-			if _, ok := err.(git.PullRequestNotFound); !ok {
+			oldPr, err := repo.GetPR(url.Path, pr.Number)
+			if _, ok := err.(git.PRNotFound); !ok {
 				return err
 			}
 			if oldPr != nil {
 				pr.Comment = oldPr.Comment
 			}
 
-			err = repo.StorePullRequest(pr)
+			err = repo.StorePR(pr)
 			if err != nil {
 				return err
 			}

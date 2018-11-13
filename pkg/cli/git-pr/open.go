@@ -30,13 +30,13 @@ func (o *open) Configure(app *cli.Cli) {
 }
 
 func (o *open) action() {
-	var prProvider ops.PullRequestProvider
+	var prProvider ops.PRProvider
 	if *o.pr != 0 {
-		prProvider = ops.NumberPullRequestProvider{Repo: o.repo, Number: *o.pr}
+		prProvider = ops.PRByNumber{Repo: o.repo, Number: *o.pr}
 	} else if *o.branch != "" {
-		prProvider = ops.BranchPullRequestProvider{Repo: o.repo, Branch: *o.branch}
+		prProvider = ops.PRByBranch{Repo: o.repo, Branch: *o.branch}
 	} else {
-		prProvider = ops.CurrentBranchPullRequestProvider{Repo: o.repo}
+		prProvider = ops.PRForCurrentBranch{Repo: o.repo}
 	}
 
 	err := ops.Open(prProvider)

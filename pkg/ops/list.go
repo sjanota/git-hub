@@ -12,13 +12,13 @@ const (
 )
 
 func List(repo git.Repo, details bool) error {
-	prs, err := repo.ListPullRequests()
+	prs, err := repo.ListPRs()
 	if err != nil {
 		return err
 	}
 
-	currentPr, err := getPullRequestForCurrentBranch(repo)
-	if _, ok := err.(git.NoPullRequestForBranch); !ok {
+	currentPr, err := getPRForCurrentBranch(repo)
+	if _, ok := err.(git.NoPRForBranch); !ok {
 		return err
 	}
 

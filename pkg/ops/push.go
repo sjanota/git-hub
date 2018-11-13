@@ -7,7 +7,7 @@ import (
 )
 
 func Push(repo git.Repo) error {
-	pr, err := getPullRequestForCurrentBranch(repo)
+	pr, err := getPRForCurrentBranch(repo)
 	if err != nil {
 		return err
 	}
@@ -39,5 +39,5 @@ func Push(repo git.Repo) error {
 	}
 
 	pr.Comment = ""
-	return repo.StorePullRequest(pr)
+	return repo.StorePR(pr)
 }

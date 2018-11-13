@@ -8,10 +8,10 @@ import (
 )
 
 type Repo interface {
-	StorePullRequest(pr *PullRequest) error
-	ListPullRequests() ([]*PullRequest, error)
-	GetPullRequest(remote string, number int) (*PullRequest, error)
-	GetPullRequestForBranch(branch string) (*PullRequest, error)
+	StorePR(pr *PullRequest) error
+	ListPRs() ([]*PullRequest, error)
+	GetPR(remote string, number int) (*PullRequest, error)
+	GetPRForBranch(branch string) (*PullRequest, error)
 
 	StaticCommentEditor(comment string, append bool) CommentEditor
 	FileCommentEditor() CommentEditor

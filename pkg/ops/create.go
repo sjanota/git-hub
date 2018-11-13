@@ -21,15 +21,20 @@ func Create(repo git.Repo) error {
 
 	remoteURL, err := repo.GetRemoteURL(remote)
 	if err != nil {
-		return err
+		return errors.Wrapf(err, "cannot get url for remote %s", remote)
 	}
 
 	url, err := github.ParseURL(remoteURL)
 	if err != nil {
-		return err
+		return errors.Wrapf(err, "cannot wrap github url %s", remoteURL)
 	}
 
 	createUrl := fmt.Sprintf("https://github.com/%s/compare/%s?expand=1", url.Path, branch)
 
-	return open.Start(createUrl)
+	err = open.Start(createUrl)
+	if err != nil {
+		return errors.Wrapf(err, "cannot open %s in browser", createUrl)
+	}
+
+	return nil
 }

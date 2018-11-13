@@ -18,7 +18,7 @@ func List(repo git.Repo, details bool) error {
 	}
 
 	currentPr, err := getPullRequestForCurrentBranch(repo)
-	if _, ok := err.(git.NoPullRequestForBranch); err != nil && !ok {
+	if _, ok := err.(git.NoPullRequestForBranch); !ok {
 		return err
 	}
 

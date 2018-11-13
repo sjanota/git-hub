@@ -9,6 +9,15 @@ type repository struct {
 	repo *git.Repository
 }
 
+func (r *repository) GetBranchRemote(branchName string) (string, error) {
+	branch, err := r.repo.Branch(branchName)
+	if err != nil {
+		return "", err
+	}
+
+	return branch.Remote, nil
+}
+
 func (r *repository) GetRootDir() (string, error) {
 	wt, err := r.repo.Worktree()
 	if err != nil {

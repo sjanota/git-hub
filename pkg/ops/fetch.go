@@ -40,9 +40,9 @@ func FetchPullRequests(repo git.Repo, remotesLister git.RemotesLister) error {
 
 		for pr := range prs.Iter() {
 			oldPr, err := repo.GetPullRequest(url.Path, pr.Number)
-			if _, ok := err.(git.PullRequestNotFound); err != nil && ok {
+			if oldPr != nil {
 				pr.Comment = oldPr.Comment
-			} else if err != nil {
+			} else if _, ok := err.(git.PullRequestNotFound); !ok {
 				return err
 			}
 

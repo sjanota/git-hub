@@ -36,8 +36,8 @@ func ParseURL(s string) (*URL, error) {
 	}
 
 	return &URL{
-		Owner:          pathParts[1],
-		RepositoryName: pathParts[2],
+		Owner:          pathParts[0],
+		RepositoryName: pathParts[1],
 		Full:           s,
 		Path:           path,
 	}, nil

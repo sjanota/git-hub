@@ -18,7 +18,7 @@ func List(repo git.Repo, details bool) error {
 	}
 
 	currentPr, err := getPRForCurrentBranch(repo)
-	if _, ok := err.(git.NoPRForBranch); !ok {
+	if _, ok := err.(git.NoPRForBranch); err != nil && !ok {
 		return err
 	}
 

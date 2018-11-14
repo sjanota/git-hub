@@ -37,6 +37,7 @@ func convertPulRequest(pr *github.PullRequest) *git.PullRequest {
 		HeadRepo: *pr.Head.Repo.FullName,
 		Number:   *pr.Number,
 		WebURL:   *pr.HTMLURL,
+		State:    *pr.State,
 		Remote:   *pr.Base.Repo.FullName,
 		Title:    *pr.Title,
 		Comment:  "",

@@ -43,6 +43,13 @@ func FetchPullRequests(repo git.Repo, remotesLister git.RemotesLister) error {
 				return err
 			}
 			if oldPr != nil {
+				if pr.State == "closed" {
+					err = repo.RemovePR(pr.Remote, pr.Number)
+					if err != nil {
+						return err
+					}
+					continue
+				}
 				pr.Comment = oldPr.Comment
 			}
 

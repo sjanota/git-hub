@@ -12,6 +12,7 @@ type Repo interface {
 	ListPRs() ([]*PullRequest, error)
 	GetPR(remote string, number int) (*PullRequest, error)
 	GetPRForBranch(branch string) (*PullRequest, error)
+	RemovePR(remote string, number int) error
 
 	StaticCommentEditor(comment string, append bool) CommentEditor
 	FileCommentEditor() CommentEditor

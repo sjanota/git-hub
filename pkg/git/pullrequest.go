@@ -21,6 +21,7 @@ type PullRequest struct {
 	Remote   string
 	Title    string
 	Comment  string
+	State    string
 }
 
 const (
@@ -30,7 +31,21 @@ const (
 	prHeadRef  = "headRef"
 	prHeadRepo = "headRepo"
 	prWebUrl   = "webUrl"
+	prState    = "state"
 )
+
+func (r *repository) RemovePR(remote string, number int) error {
+	cfg, err := r.repo.Config()
+	if err != nil {
+		return err
+	}
+
+	subsection := fmt.Sprintf("%s:%v", remote, number)
+
+	cfg.Raw.RemoveSubsection("github-pr", subsection)
+
+	return r.repo.Storer.SetConfig(cfg)
+}
 
 func (r *repository) ListPRs() ([]*PullRequest, error) {
 	cfg, err := r.repo.Config()
@@ -64,6 +79,7 @@ func (r *repository) StorePR(pr *PullRequest) error {
 		SetOption(prComment, encodeComment(pr.Comment)).
 		SetOption(prHeadRef, pr.HeadRef).
 		SetOption(prHeadRepo, pr.HeadRepo).
+		SetOption(prState, pr.State).
 		SetOption(prWebUrl, pr.WebURL)
 
 	err = r.repo.Storer.SetConfig(cfg)
@@ -119,6 +135,7 @@ func readPRFromSubsection(subsection *git_config.Subsection) (*PullRequest, erro
 		Title:    subsection.Option(prTitle),
 		Comment:  decodedComment,
 		HeadRef:  subsection.Option(prHeadRef),
+		State:    subsection.Option(prState),
 		HeadRepo: subsection.Option(prHeadRepo),
 		Number:   number,
 		WebURL:   subsection.Option(prWebUrl),

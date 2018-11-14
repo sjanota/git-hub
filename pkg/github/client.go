@@ -43,7 +43,7 @@ func (c client) PushPullRequestComment(url *URL, pr *git.PullRequest) error {
 func (c client) GetPullRequests(url *URL, filter PullRequestFilter) (PullRequests, error) {
 
 	prs, _, err := c.gh.PullRequests.List(context.Background(), url.Owner, url.RepositoryName, &github.PullRequestListOptions{
-		State: "open",
+		State: "open,closed",
 	})
 
 	if err != nil {

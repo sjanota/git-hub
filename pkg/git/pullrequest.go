@@ -1,6 +1,7 @@
 package git
 
 import (
+	"encoding/base64"
 	"fmt"
 	"github.com/pkg/errors"
 	git_config "gopkg.in/src-d/go-git.v4/plumbing/format/config"
@@ -60,7 +61,7 @@ func (r *repository) StorePR(pr *PullRequest) error {
 
 	cfg.Raw.Section(prSection).Subsection(subsection).
 		SetOption(prTitle, pr.Title).
-		SetOption(prComment, strings.Replace(pr.Comment, "\n", "\\n", -1)).
+		SetOption(prComment, encodeComment(pr.Comment)).
 		SetOption(prHeadRef, pr.HeadRef).
 		SetOption(prHeadRepo, pr.HeadRepo).
 		SetOption(prWebUrl, pr.WebURL)
@@ -109,9 +110,14 @@ func readPRFromSubsection(subsection *git_config.Subsection) (*PullRequest, erro
 		return nil, err
 	}
 
+	decodedComment, err := decodeComment(subsection.Option(prComment))
+	if err != nil {
+		return nil, err
+	}
+
 	return &PullRequest{
 		Title:    subsection.Option(prTitle),
-		Comment:  strings.Replace(subsection.Option(prComment), "\\n", "\n", -1),
+		Comment:  decodedComment,
 		HeadRef:  subsection.Option(prHeadRef),
 		HeadRepo: subsection.Option(prHeadRepo),
 		Number:   number,
@@ -192,4 +198,16 @@ func (e fileCommentEditor) Edit(pr *PullRequest) (string, error) {
 	}
 
 	return strings.TrimSpace(string(output)), nil
+}
+
+func encodeComment(decoded string) string {
+	return base64.RawURLEncoding.EncodeToString([]byte(decoded))
+}
+
+func decodeComment(encoded string) (string, error) {
+	bytes, err := base64.RawURLEncoding.DecodeString(encoded)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), err
 }
